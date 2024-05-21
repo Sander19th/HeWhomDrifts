@@ -1,19 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UintyEngine.AI;
+using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
-   public NavMeshAgent agent;
+   public UnityEngine.AI.NavMeshAgent agent;
 
    public Transform player;
 
-   public LayerMask WhatIsGround, WhatIsPlayer;
+   public LayerMask WhatIsGround, whatIsPlayer;
+
+   public float health;
 
    //Attacking
    public float timeBetweenAttacks;
    bool alreadyAttacked;
+   public GameObject projectile;
 
    //States
    public float sightRange, attackRange;
@@ -21,7 +24,7 @@ public class EnemyAI : MonoBehaviour
 
    private void Awake(){
 	   player = GameObject.Find("PlayerableCharacter").transform;
-	   agent = GetComponent<NavMeshAgent>();
+	   agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
    }
 
     private void Update(){
@@ -29,22 +32,49 @@ public class EnemyAI : MonoBehaviour
 		playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
 		playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-		//Exclamation is for false statement 
+		//Exclamation indicates false statement
 		if (!playerInSightRange && !playerInAttackRange) Idle();
-		if (playerInSightRange && !playerInAttackRange) Idle();
+		if (playerInSightRange && !playerInAttackRange) Alert();
+		if (playerInSightRange && playerInAttackRange) AttackPlayer();
+   }
+      
+	private void Idle(){
+		agent.SetDestination(transform.position);
+	}
 
+   	private void Alert(){
+		agent.SetDestination(transform.position);
+
+		transform.LookAt(player);
+	}
+
+   private void AttackPlayer(){
+	   agent.SetDestination(transform.position);
+
+		transform.LookAt(player);
+
+		if (!alreadyAttacked){
+			//Attack code
+			Rigidbody rb = Instantiate(projectile, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+
+			//
+			alreadyAttacked = true;
+			Invoke(nameof(ResetAttack), timeBetweenAttacks);
+		}
    }
 
-   private void Idle(){
-
+   private void ResetAttack(){
+	   alreadyAttacked = false;
    }
 
-   private void Attacking(){
+	//Enemy damage simulation
+   public void TakeDamage(int damage){
+	   health -= damage;
 
+	   if (health <= 0) Invoke(nameof(DestroyEnemy), .5f);
    }
 
-    private void Attacking(){
-
+   private void DestroyEnemy(){
+	   Destroy(gameObject);
    }
-
 }

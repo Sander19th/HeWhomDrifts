@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4369623554618967884}
   - component: {fileID: 4211836278544496011}
   - component: {fileID: 3363108520003440607}
+  - component: {fileID: -8722290422374416093}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -142,6 +143,33 @@ MonoBehaviour:
     _json: '{"nest":{"source":"Macro","macro":0,"embed":null}}'
     _objectReferences:
     - {fileID: 11400000, guid: a04cece8617cfab4db889aa38c5ca6c7, type: 2}
+--- !u!114 &-8722290422374416093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326365918138208394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63564a169aa5bd64eaf872b9b2fc1fc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 0}
+  player: {fileID: 0}
+  WhatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 0
+  health: 0
+  timeBetweenAttacks: 0
+  projectile: {fileID: 0}
+  sightRange: 0
+  attackRange: 0
+  playerInSightRange: 0
+  playerInAttackRange: 0
 --- !u!1 &2033186388854558061
 GameObject:
   m_ObjectHideFlags: 0

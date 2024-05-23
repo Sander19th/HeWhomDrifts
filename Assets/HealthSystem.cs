@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.VisualScripting;
+
 
 public class HealthSystem : MonoBehaviour
 {
@@ -24,6 +26,9 @@ public class HealthSystem : MonoBehaviour
         
             // Call the GameOverScript's setup method
             gameOverScript.setup();
+
+               // Disable player movement
+                gameObject.SetActive(false);
         }
     }
 }

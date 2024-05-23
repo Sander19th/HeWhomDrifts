@@ -12,7 +12,7 @@ public class GameOverScript : MonoBehaviour
   }
 
   public void RetryButton(){
-	  SceneManager.LoadScene("Version 1.0.2");
+	  SceneManager.LoadScene("TheGame");
   }
 
   public void QuitButton(){

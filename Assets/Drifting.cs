@@ -9,8 +9,8 @@ public class Drifting : MonoBehaviour
     public float rotationAngle = 30.0f; // Base rotation angle for left and right movement
     public float driftSpeedMultiplier = 2.0f; // Multiplier for speed during drift
     public float driftRotationIncrease = 37.0f; // Additional rotation during drift
-    public float rotationSmoothing = 5.0f; // Smoothing factor for normal rotation
-    public float driftRotationSmoothing = 10.0f; // Smoothing factor for drift rotation
+    public float rotationSmoothing = 6.0f; // Smoothing factor for normal rotation
+    public float driftRotationSmoothing = 12.0f; // Smoothing factor for drift rotation
 
     private Quaternion originalRotation; // Store the original rotation
     private Quaternion targetRotation; // Target rotation

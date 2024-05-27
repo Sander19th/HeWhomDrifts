@@ -6,9 +6,11 @@ public class SpawnAnchor : MonoBehaviour
 {
     public GameObject Projetile; // Reference to the projectile prefab
     public Transform spawnPoint; // The point where the projectile will be spawned
-    public float baseLaunchForce = 10.0f; // Base launch force
-    public float maxAdditionalForce = 20.0f; // Maximum additional force when holding down the space bar
-    public float chargeTime = 2.0f; // Time to reach maximum additional force
+    public float baseLaunchForce = 15.0f; // Base launch force
+    public float maxAdditionalForce = 30.0f; // Maximum additional force when holding down the space bar
+    public float chargeTime = 4.0f; // Time to reach maximum additional force
+    public float shotCooldown = 2.0f; // Cooldown between shots
+    private float lastShotTime; // Time when the last shot was fired
 
     private float currentChargeTime = 0.0f; // Time the space bar has been held down
 
@@ -19,27 +21,35 @@ public class SpawnAnchor : MonoBehaviour
         {
             Debug.LogError("Spawn point not assigned!");
         }
+        // Initialize lastShotTime to start of the game
+        lastShotTime = -shotCooldown;
     }
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Time.time - lastShotTime > shotCooldown) // Check if shot cooldown has passed
         {
-            // Increase the charge time while the space bar is held down
-            currentChargeTime += Time.deltaTime;
-        }
+            if (Input.GetKey(KeyCode.Space))
+            {
+                // Increase the charge time while the space bar is held down
+                currentChargeTime += Time.deltaTime;
+            }
 
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            // Calculate the launch force based on the charge time
-            float launchForce = baseLaunchForce + (maxAdditionalForce * (currentChargeTime / chargeTime));
-            launchForce = Mathf.Clamp(launchForce, baseLaunchForce, baseLaunchForce + maxAdditionalForce);
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                // Calculate the launch force based on the charge time
+                float launchForce = baseLaunchForce + (maxAdditionalForce * (currentChargeTime / chargeTime));
+                launchForce = Mathf.Clamp(launchForce, baseLaunchForce, baseLaunchForce + maxAdditionalForce);
 
-            // Spawn and launch the projectile
-            LaunchProjectile(launchForce);
+                // Spawn and launch the projectile
+                LaunchProjectile(launchForce);
 
-            // Reset the charge time
-            currentChargeTime = 0.0f;
+                // Reset the charge time
+                currentChargeTime = 0.0f;
+
+                // Update the last shot time
+                lastShotTime = Time.time;
+            }
         }
     }
 

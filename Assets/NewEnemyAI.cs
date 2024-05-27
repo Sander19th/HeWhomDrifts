@@ -11,6 +11,9 @@ public class NewEnemyAI : MonoBehaviour
     public float shootInterval = 2f; // Time between each shot
     public float projectileSpeed = 10f; // Speed of the projectile
 
+    // Damage amount to be inflicted on the player
+    public int damageAmount = 10;
+
     private float lastShootTime = 0f; // The last time the enemy shot a projectile
 
     void Update()
@@ -32,8 +35,8 @@ public class NewEnemyAI : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
-            // Adjust rotation to match model's forward direction if necessary
-            transform.rotation *= Quaternion.Euler(0, 180, 0); // This might be necessary depending on the model's orientation
+            // Optional: Adjust rotation to match model's forward direction if necessary
+            // transform.rotation *= Quaternion.Euler(0, 180, 0);
 
             // Shoot at intervals
             if (Time.time >= lastShootTime + shootInterval)
@@ -65,5 +68,25 @@ public class NewEnemyAI : MonoBehaviour
         // Draw the attack range in the editor
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        
+        // Check if the collision is with the player
+        if (other.CompareTag("Player"))
+        {
+          Debug.Log("Ouch! Player collision detected!");
+            // Get the HealthSystem component attached to the player
+            HealthSystem playerHealth = other.GetComponent<HealthSystem>();
+            
+            // If the player has a HealthSystem component, apply damage
+            if (playerHealth != null)
+            {
+                // Call the TakeDamage function to apply damage to the player
+                playerHealth.TakeDamage(damageAmount);
+               
+            }
+        }
     }
 }

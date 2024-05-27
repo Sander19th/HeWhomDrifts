@@ -13,8 +13,8 @@ public class Cannonball : MonoBehaviour
         // Check if the cannonball has not already collided and if the collided object has the tag "Enemy"
         if (!hasCollided && collision.gameObject.CompareTag("Enemy"))
         {
-            // Destroy the collided object
-            Destroy(collision.gameObject);
+            // Destroy the root object of the collided object
+            Destroy(collision.gameObject.transform.root.gameObject);
 
             // Destroy the cannonball
             Destroy(gameObject);
@@ -30,4 +30,5 @@ public class Cannonball : MonoBehaviour
         Destroy(gameObject, lifeAfterCollision);
     }
 }
+
 

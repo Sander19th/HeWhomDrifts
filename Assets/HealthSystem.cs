@@ -11,17 +11,22 @@ public class HealthSystem : MonoBehaviour
     public GameOverScript gameOverScript;
 
     // Health variable to track player's health
-    public int health = 1;
+    public int maxHealth = 5;
+    public int currentHealth;
+
+    void start(){
+        currentHealth = maxHealth;
+    }
 
     // Function to reduce player's health
     public void TakeDamage(int damage)
     {
 
-        health -= damage;
+        currentHealth -= damage;
         
         
         // Check if player's health is zero or less
-        if (health <= 0)
+        if (currentHealth <= 0)
         {
         
             // Call the GameOverScript's setup method

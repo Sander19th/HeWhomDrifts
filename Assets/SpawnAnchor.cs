@@ -14,6 +14,13 @@ public class SpawnAnchor : MonoBehaviour
 
     private float currentChargeTime = 0.0f; // Time the space bar has been held down
 
+    AudioManager audioManager; //Calls on the audiomanager
+
+
+    private void Awake(){
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         // Ensure spawnPoint is assigned
@@ -43,6 +50,9 @@ public class SpawnAnchor : MonoBehaviour
 
                 // Spawn and launch the projectile
                 LaunchProjectile(launchForce);
+
+                //Plays Cannon shooting sound
+                audioManager.PlaySFX(audioManager.cannonShoot);
 
                 // Reset the charge time
                 currentChargeTime = 0.0f;

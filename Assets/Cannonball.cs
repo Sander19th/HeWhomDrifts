@@ -8,11 +8,22 @@ public class Cannonball : MonoBehaviour
 
     private bool hasCollided = false; // Flag to track if the cannonball has collided
 
+     AudioManager audioManager; //Calls on the audiomanager
+
+
+    private void Awake(){
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
+
     void OnCollisionEnter(Collision collision)
     {
         // Check if the cannonball has not already collided and if the collided object has the tag "Enemy"
         if (!hasCollided && collision.gameObject.CompareTag("Enemy"))
         {
+            //Plays enemy death sound
+            audioManager.PlaySFX(audioManager.enemyDeath1);
+
             // Destroy the root object of the collided object
             Destroy(collision.gameObject.transform.root.gameObject);
 

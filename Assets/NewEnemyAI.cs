@@ -16,6 +16,13 @@ public class NewEnemyAI : MonoBehaviour
 
     private float lastShootTime = 0f; // The last time the enemy shot a projectile
 
+     AudioManager audioManager; //Calls on the audiomanager
+
+
+    private void Awake(){
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Update()
     {
         if (player == null)
@@ -76,6 +83,10 @@ public class NewEnemyAI : MonoBehaviour
         // Check if the collision is with the player
         if (other.CompareTag("Player"))
         {
+
+          //Plays enemy death sound
+          audioManager.PlaySFX(audioManager.enemyAttack1);
+
           Debug.Log("Ouch! Player collision detected!");
             // Get the HealthSystem component attached to the player
             HealthSystem playerHealth = other.GetComponent<HealthSystem>();

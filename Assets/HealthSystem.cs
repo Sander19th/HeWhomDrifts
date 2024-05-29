@@ -14,6 +14,13 @@ public class HealthSystem : MonoBehaviour
     public int maxHealth = 5;
     public int currentHealth;
 
+    AudioManager audioManager; //Calls on the audiomanager
+
+    private void Awake(){
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
+
     void start(){
         currentHealth = maxHealth;
     }
@@ -28,6 +35,10 @@ public class HealthSystem : MonoBehaviour
         // Check if player's health is zero or less
         if (currentHealth <= 0)
         {
+
+         //Plays Cannon shooting sound
+                audioManager.PlaySFX(audioManager.playerDeath);
+
         
             // Call the GameOverScript's setup method
             gameOverScript.setup();

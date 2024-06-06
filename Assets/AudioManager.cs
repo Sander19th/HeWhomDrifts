@@ -25,7 +25,7 @@ public class AudioManager : MonoBehaviour
     public float enemyDeathVolume = 0.5f; // Volume for enemy death sounds
     public float woodImpactVolume = 0.8f; // Volume for wood impact sounds
 
-    // Existing method to play a specific SFX
+    // Method to play a specific SFX
     public void PlaySFX(AudioClip clip, float volume = 1.0f)
     {
         SFXSource.PlayOneShot(clip, volume);

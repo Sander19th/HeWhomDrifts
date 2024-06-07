@@ -23,7 +23,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip enemyDeath4; // Yodel sound
 
     public float enemyDeathVolume = 0.5f; // Volume for enemy death sounds
-    public float woodImpactVolume = 0.8f; // Volume for wood impact sounds
+    public float woodImpactVolume = 1.0f; // Volume for wood impact sounds
 
     // Method to play a specific SFX
     public void PlaySFX(AudioClip clip, float volume = 1.0f)

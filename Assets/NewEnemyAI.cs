@@ -5,22 +5,31 @@ using UnityEngine;
 public class NewEnemyAI : MonoBehaviour
 {
     public Transform player; // Reference to the player's transform
-    public GameObject Projetile; // Reference to the projectile prefab
+    public GameObject projectile; // Reference to the projectile prefab
     public Transform shootPoint; // The point from where the projectile will be shot
     public float attackRange = 15f; // The range within which the enemy can attack the player
     public float shootInterval = 2f; // Time between each shot
     public float projectileSpeed = 10f; // Speed of the projectile
 
-    // Damage amount to be inflicted on the player
-    public int damageAmount = 10;
+    public int damageAmount = 10; // Damage amount to be inflicted on the player
 
     private float lastShootTime = 0f; // The last time the enemy shot a projectile
 
-     AudioManager audioManager; //Calls on the audiomanager
+    private AudioManager audioManager; // Reference to the AudioManager
+    private Animator animator; // Reference to the Animator component
 
-
-    private void Awake(){
+    private void Awake()
+    {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+
+        // Find the Animator component on the child GameObject
+        animator = GetComponentInChildren<Animator>();
+
+        // Check if the Animator component is attached
+        if (animator == null)
+        {
+            Debug.LogError("Animator component not found on the enemy GameObject or its children");
+        }
     }
 
     void Update()
@@ -42,9 +51,6 @@ public class NewEnemyAI : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
-            // Optional: Adjust rotation to match model's forward direction if necessary
-            // transform.rotation *= Quaternion.Euler(0, 180, 0);
-
             // Shoot at intervals
             if (Time.time >= lastShootTime + shootInterval)
             {
@@ -57,8 +63,8 @@ public class NewEnemyAI : MonoBehaviour
     void Shoot()
     {
         // Instantiate the projectile at the shoot point
-        GameObject projectile = Instantiate(Projetile, shootPoint.position, shootPoint.rotation);
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        GameObject projectileInstance = Instantiate(projectile, shootPoint.position, shootPoint.rotation);
+        Rigidbody rb = projectileInstance.GetComponent<Rigidbody>();
 
         // Calculate the direction to shoot the projectile
         Vector3 shootDirection = (player.position - shootPoint.position).normalized;
@@ -79,24 +85,32 @@ public class NewEnemyAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
         // Check if the collision is with the player
         if (other.CompareTag("Player"))
         {
+            // Play the enemy attack sound
+            audioManager.PlaySFX(audioManager.enemyAttack1);
 
-          //Plays enemy death sound
-          audioManager.PlaySFX(audioManager.enemyAttack1);
+            // Check if Animator is attached before triggering the attack animation
+            if (animator != null)
+            {
+                animator.SetTrigger("Attack");
+            }
 
-          Debug.Log("Ouch! Player collision detected!");
+            Debug.Log("Ouch! Player collision detected!");
+
             // Get the HealthSystem component attached to the player
             HealthSystem playerHealth = other.GetComponent<HealthSystem>();
-            
+
             // If the player has a HealthSystem component, apply damage
             if (playerHealth != null)
             {
                 // Call the TakeDamage function to apply damage to the player
                 playerHealth.TakeDamage(damageAmount);
-               
+            }
+            else
+            {
+                Debug.LogWarning("HealthSystem component not found on player");
             }
         }
     }

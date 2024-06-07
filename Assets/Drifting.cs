@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Drifting : MonoBehaviour
@@ -12,8 +11,16 @@ public class Drifting : MonoBehaviour
     public float rotationSmoothing = 6.0f;
     public float driftRotationSmoothing = 12.0f;
 
+    public float driftDuration = 1.0f;
+    public float driftCooldown = 3.0f;
+    public float speedBoost = 20.0f;
+    public float speedBoostDuration = 2.0f;
+
     private Quaternion originalRotation;
     private Quaternion targetRotation;
+    private bool isDrifting = false;
+    private bool canDrift = true;
+    private bool isSpeedBoosted = false;
 
     void Start()
     {
@@ -23,10 +30,21 @@ public class Drifting : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime, Space.World);
+        float currentSpeed = speed;
+
+        if (isSpeedBoosted)
+        {
+            currentSpeed = speedBoost;
+        }
+
+        transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime, Space.World);
 
         float moveHorizontal = Input.GetAxis("Horizontal");
-        bool isDrifting = Input.GetKey(KeyCode.LeftControl);
+
+        if (Input.GetKeyDown(KeyCode.LeftControl) && canDrift)
+        {
+            StartCoroutine(Drift());
+        }
 
         float currentMoveSpeed = moveSpeed;
         float currentRotationAngle = rotationAngle;
@@ -56,5 +74,23 @@ public class Drifting : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * currentRotationSmoothing);
+    }
+
+    IEnumerator Drift()
+    {
+        isDrifting = true;
+        canDrift = false;
+        StartCoroutine(SpeedBoost());
+        yield return new WaitForSeconds(driftDuration);
+        isDrifting = false;
+        yield return new WaitForSeconds(driftCooldown);
+        canDrift = true;
+    }
+
+    IEnumerator SpeedBoost()
+    {
+        isSpeedBoosted = true;
+        yield return new WaitForSeconds(speedBoostDuration);
+        isSpeedBoosted = false;
     }
 }
